@@ -39,7 +39,7 @@ dataloader = DataLoader(dataset,
                         generator=g,)
 
 cka = CKA(model1, model2,
-        model1_name="ResNet50", model2_name="ResNet50",
+        model1_name="ResNet18", model2_name="ResNet34",
         device='cuda')
 
 cka.compare(dataloader)

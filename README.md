@@ -5,10 +5,15 @@ A tiny package to compare two neural networks in PyTorch. There are many ways to
 ### Centered Kernel Alignment
 Centered Kernel Alignment (CKA) is a representation similarity metric that is widely used for understanding the representations learned by neural networks. Specifically, CKA takes two feature maps / representations X and Y as input and computes their normalized similarity (in terms of the Hilbert-Schmidt Independence Criterion (HSIC)) as
 
+![alt text](assets/cka.png "CKA original version")
 
 However, the above formula is not scalable against deep architectures and large datasets. Therefore, a minibatch version can be constructed that uses an unbiased estimator of the HSIC as
 
 ![alt text](assets/cka_mb.png "CKA minibatch version")
+
+![alt text](assets/cka_hsic.png "CKA HSIC calculation")
+
+The above results follow directly from the 2021 ICLR paper by [Nguyen T., Raghu M, Kornblith S](https://arxiv.org/abs/2010.15327).
 
 ## Getting Started
 
@@ -33,8 +38,10 @@ cka.compare(dataloader)
 ```
 
 ## Examples
+`torch_cka` can be used with any pytorch model (subclass of `nn.Module`) and can be used with pretrained models available from popular sources like torchHub, timm, huggingface etc. Some examples of where this package can come in handy are illustrated below.
 
 ### Comparing two ResNets
+![alt text](assets/resnet_compare.png "Comparing ResNet18 and ResNet34")
 
 ### Comparing two similar architectures
 

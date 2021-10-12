@@ -5,9 +5,9 @@ A tiny package to compare two neural networks in PyTorch. There are many ways to
 ### Centered Kernel Alignment
 Centered Kernel Alignment (CKA) is a representation similarity metric that is widely used for understanding the representations learned by neural networks. Specifically, CKA takes two feature maps / representations **X** and **Y** as input and computes their normalized similarity (in terms of the Hilbert-Schmidt Independence Criterion (HSIC)) as
 
-<p style="text-align:center;">
-<img src="assets/cka.png" alt="CKA original version" width="70%">
-</p>
+
+<img src="assets/cka.png" alt="CKA original version" width="60%" style="display: block; margin-left: auto; margin-right: auto;">
+
 
 However, the above formula is not scalable against deep architectures and large datasets. Therefore, a minibatch version can be constructed that uses an unbiased estimator of the HSIC as
 
@@ -26,17 +26,24 @@ pip install torch_cka
 ### Usage
 ```python
 from torch_cka import CKA
-model1 = resnet18(pretrained=True)
+model1 = resnet18(pretrained=True)  # Or any neural network of your choice
 model2 = resnet34(pretrained=True)
 
 dataloader = DataLoader(your_dataset, 
-                        batch_size=batch_size, 
-                        shuffle=False)
+                        batch_size=batch_size, # according to your device memory
+                        shuffle=False)  # Don't forget to seed your dataloader
 
 cka = CKA(model1, model2,
+          model1_name="ResNet18",   # good idea to provide names to avoid confusion
+          model2_name="ResNet34",
+          model1_layers=layer_names_resnet18, # List of layers to extract features from
+          model2_layers=layer_names_resnet34, 
           device='cuda')
 
-cka.compare(dataloader)
+cka.compare(dataloader) # secondary dataloader is optional
+
+results = cka.export()  # returns a dict that contains model names, layer names
+                        # and the CKA matrix
 ```
 
 ## Examples
@@ -65,6 +72,7 @@ Yet another application is to compare two datasets - preferably two versions of 
 - If your model is large (lots of layers or large feature maps), try to extract from select layers. This is to avoid out of memory issues. 
 - If you still want to compare the entire feature map, you can run it multiple times with few layers at each iteration and export your data using `cka.export()`. The exported data can then be concatenated to produce the full CKA matrix.
 - Give proper model names to avoid confusion when interpreting the results. The code automatically extracts the model name for you by default, but it is good practice to label the models according to your use case.
+- When providing your dataloader(s) to the `compare()` function, it is important that they are [seeded properly](https://pytorch.org/docs/stable/data.html#data-loading-randomness) for reproducibility. 
 
 
 

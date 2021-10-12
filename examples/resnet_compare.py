@@ -1,5 +1,5 @@
 import torch
-from torchvision.models import resnet18, resnet34, resnet50
+from torchvision.models import resnet18, resnet34, resnet50, resnet101, resnet152, densenet121
 from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
@@ -45,3 +45,6 @@ cka = CKA(model1, model2,
 cka.compare(dataloader)
 
 cka.plot_results(save_path="../assets/resnet_compare.png")
+
+
+#===============================================================

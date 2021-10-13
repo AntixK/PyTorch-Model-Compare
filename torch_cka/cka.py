@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-
 from tqdm import tqdm
 from functools import partial
 from warnings import warn
@@ -18,7 +17,17 @@ class CKA:
                  model2_name: str = None,
                  model1_layers: List[str] = None,
                  model2_layers: List[str] = None,
-                 device='cpu'):
+                 device: str ='cpu'):
+        """
+
+        :param model1: (nn.Module) Neural Network 1
+        :param model2: (nn.Module) Neural Network 2
+        :param model1_name: (str) Name of model 1
+        :param model2_name: (str) Name of model 2
+        :param model1_layers: (List) List of layers to extract features from
+        :param model2_layers: (List) List of layers to extract features from
+        :param device: Device to run the model
+        """
 
         self.model1 = model1
         self.model2 = model2
@@ -118,7 +127,14 @@ class CKA:
 
     def compare(self,
                 dataloader1: DataLoader,
-                dataloader2: DataLoader = None):
+                dataloader2: DataLoader = None) -> None:
+        """
+        Computes the feature similarity between the models on the
+        given datasets.
+        :param dataloader1: (DataLoader)
+        :param dataloader2: (DataLoader) If given, model 2 will run on this
+                            dataset. (default = None)
+        """
 
         if dataloader2 is None:
             warn("Dataloader for Model 2 is not given. Using the same dataloader for both models.")
@@ -159,6 +175,10 @@ class CKA:
         assert not torch.isnan(self.hsic_matrix).any(), "HSIC computation resulted in NANs"
 
     def export(self) -> Dict:
+        """
+        Exports the CKA data along with the respective model layer names.
+        :return:
+        """
         return {
             "model1_name": self.model1_info['Name'],
             "model2_name": self.model2_info['Name'],

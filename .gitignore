@@ -124,4 +124,5 @@ dmypy.json
 .pyre/
 data/
 cka-3.ipynb
+dist/
 

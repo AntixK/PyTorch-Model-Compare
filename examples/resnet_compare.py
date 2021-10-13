@@ -1,5 +1,5 @@
 import torch
-from torchvision.models import resnet18, resnet34, resnet50, resnet101, resnet152, densenet121
+from torchvision.models import resnet18, resnet34, resnet50, wide_resnet50_2
 from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
@@ -38,13 +38,24 @@ dataloader = DataLoader(dataset,
                         worker_init_fn=seed_worker,
                         generator=g,)
 
+# cka = CKA(model1, model2,
+#         model1_name="ResNet18", model2_name="ResNet34",
+#         device='cuda')
+#
+# cka.compare(dataloader)
+#
+# cka.plot_results(save_path="../assets/resnet_compare.png")
+
+
+#===============================================================
+model1 = resnet50(pretrained=True)
+model2 = wide_resnet50_2(pretrained=True)
+
+
 cka = CKA(model1, model2,
-        model1_name="ResNet18", model2_name="ResNet34",
+        model1_name="ResNet50", model2_name="WideResNet50",
         device='cuda')
 
 cka.compare(dataloader)
 
-cka.plot_results(save_path="../assets/resnet_compare.png")
-
-
-#===============================================================
+cka.plot_results(save_path="../assets/resnet-resnet_compare.png")

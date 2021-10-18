@@ -79,7 +79,12 @@ class CKA:
         self.model1.eval()
         self.model2.eval()
 
-    def _log_layer(self, model: str, name: str, layer: nn.Module, inp: torch.Tensor, out: torch.Tensor):
+    def _log_layer(self,
+                   model: str,
+                   name: str,
+                   layer: nn.Module,
+                   inp: torch.Tensor,
+                   out: torch.Tensor):
 
         if model == "model1":
             self.model1_features[name] = out
@@ -140,18 +145,20 @@ class CKA:
             warn("Dataloader for Model 2 is not given. Using the same dataloader for both models.")
             dataloader2 = dataloader1
 
+        self.model1_info['Dataset'] = dataloader1.dataset.__repr__().split('\n')[0]
+        self.model2_info['Dataset'] = dataloader2.dataset.__repr__().split('\n')[0]
+
         N = len(self.model1_layers) if self.model1_layers is not None else len(list(self.model1.modules()))
         M = len(self.model2_layers) if self.model2_layers is not None else len(list(self.model2.modules()))
 
         self.hsic_matrix = torch.zeros(N, M, 3)
 
-        num_batches = len(dataloader1)
+        num_batches = min(len(dataloader1), len(dataloader1))
 
         for (x1, *_), (x2, *_) in tqdm(zip(dataloader1, dataloader2), desc="| Comparing features |", total=num_batches):
 
             self.model1_features = {}
             self.model2_features = {}
-
             _ = self.model1(x1.to(self.device))
             _ = self.model2(x2.to(self.device))
 
@@ -165,6 +172,7 @@ class CKA:
                     Y = feat2.flatten(1)
                     L = Y @ Y.t()
                     L.fill_diagonal_(0)
+                    assert K.shape == L.shape, f"Feature shape mistach! {K.shape}, {L.shape}"
 
                     self.hsic_matrix[i, j, 1] += self._HSIC(K, L) / num_batches
                     self.hsic_matrix[i, j, 2] += self._HSIC(L, L) / num_batches
@@ -185,19 +193,28 @@ class CKA:
             "CKA": self.hsic_matrix,
             "model1_layers": self.model1_info['Layers'],
             "model2_layers": self.model2_info['Layers'],
+            "dataset1_name": self.model1_info['Dataset'],
+            "dataset2_name": self.model2_info['Dataset'],
+
         }
 
-    def plot_results(self, save_path: str = None):
+    def plot_results(self,
+                     save_path: str = None,
+                     title: str = None):
         fig, ax = plt.subplots()
         im = ax.imshow(self.hsic_matrix, origin='lower', cmap='magma')
         ax.set_xlabel(f"Layers {self.model2_info['Name']}", fontsize=15)
         ax.set_ylabel(f"Layers {self.model1_info['Name']}", fontsize=15)
-        ax.set_title(f"{self.model1_info['Name']} vs {self.model2_info['Name']}", fontsize=18)
-        # fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04) # Values from : https://stackoverflow.com/a/26720422
+
+        if title is not None:
+            ax.set_title(f"{title}", fontsize=18)
+        else:
+            ax.set_title(f"{self.model1_info['Name']} vs {self.model2_info['Name']}", fontsize=18)
+
         add_colorbar(im)
         plt.tight_layout()
 
         if save_path is not None:
-            plt.savefig(save_path, dpi=200)
+            plt.savefig(save_path, dpi=300)
 
         plt.show()

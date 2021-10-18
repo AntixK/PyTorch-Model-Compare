@@ -1,4 +1,4 @@
-# PyTorch Model Compare (WIP)
+# PyTorch Model Compare
 
 A tiny package to compare two neural networks in PyTorch. There are many ways to compare two neural networks, but one robust and scalable way is using the **Centered Kernel Alignment** (CKA) metric, where the features of the networks are compared.
 
@@ -67,14 +67,20 @@ CNNs have been analysed a lot over the past decade since AlexNet. We somewhat kn
 
 ![alt text](assets/Vit_ResNet34_comparison.png "Comparing ResNet34 and ViT-Base")
 
-### Comparing Dataset Drift 
-Yet another application is to compare two datasets - preferably two versions of the data. This is especially useful in production where data drift is a known issue. If you have an updated version of a dataset, you can study how your model will perform on it by comparing the representations of the datasets. This can be more telling about actual performance than simply comparing the datasets directly.
+### Comparing Datasets 
+Yet another application is to compare two datasets - preferably two versions of the data. This is especially useful in production where data drift is a known issue. If you have an updated version of a dataset, you can study how your model will perform on it by comparing the representations of the datasets. This can be more telling about actual performance than simply comparing the datasets directly. 
+
+This can also be quite useful in studying the performance of a model on downstream tasks and fine-tuning. For instance, if the CKA score is high for some features on different datasets, then those can be frozen during fine-tuning. As an example, the following figure compares the features of a pretrained Resnet50 on the Imagenet test data and the VOC dataset. Clearly, the pretrained features have little correlation with the VOC dataset. Therefore, we have to resort to fine-tuning to get at least satisfactory results.
+
+![alt text](assets/VOC-comparison.png "Comparing Imagenet and VOC datasets")
+
 
 ## Tips
 - If your model is large (lots of layers or large feature maps), try to extract from select layers. This is to avoid out of memory issues. 
 - If you still want to compare the entire feature map, you can run it multiple times with few layers at each iteration and export your data using `cka.export()`. The exported data can then be concatenated to produce the full CKA matrix.
 - Give proper model names to avoid confusion when interpreting the results. The code automatically extracts the model name for you by default, but it is good practice to label the models according to your use case.
 - When providing your dataloader(s) to the `compare()` function, it is important that they are [seeded properly](https://pytorch.org/docs/stable/data.html#data-loading-randomness) for reproducibility. 
+- When comparing datasets, be sure to set `drop_last=True` when building the dataloader. This resolves shape mismatch issues - especially in differently sized datasets.
 
 
 ## Citation

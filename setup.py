@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="torch_cka",
-    version="0.1",
+    version="0.2",
     author="Anand K Subramanian",
     author_email="anandkrish894@gmail.com",
     description="A package to compare neural networks by their feature similarity",

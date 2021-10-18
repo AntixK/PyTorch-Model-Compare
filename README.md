@@ -60,9 +60,14 @@ Another way of using CKA is in ablation studies. We can go further than those ab
 
 ![alt text](assets/resnet-wideresnet_compare.png "Comparing ResNet50 and WideResNet50")
 
-We clearly notice that the learned features are indeed different after the first few layers. The width has a more pronounced effect in deeper layers as compared to the earlier layers as both networks seem to learn similar features in the initial layers.
+We clearly notice that the learned features are indeed different after the first few layers. The width has a more pronounced effect in deeper layers as compared to the earlier layers as both networks seem to learn similar features in the initial layers. 
 
-### Comparing a ResNet with Vision Transformer (ViT)
+As a bonus, here is a comparison between ViT and the latest SOTA model [Swin Transformer](https://arxiv.org/abs/2103.14030) pretrained on ImageNet22k.
+
+![alt text](assets/Swin-ViT-comparison.png "Comparing Swin Transformer and ViT")
+
+
+### Comparing quite different architectures
 CNNs have been analysed a lot over the past decade since AlexNet. We somewhat know what sort of features they learn across their layers (through visualizations) and we have put them to good use. One interesting approach is to compare these understandable features with newer models that don't permit easy visualizations (like recent vision transformer architectures) and study them. This has indeed been a hot research topic (see [Raghu et.al 2021](https://arxiv.org/abs/2108.08810)).
 
 ![alt text](assets/Vit_ResNet34_comparison.png "Comparing ResNet34 and ViT-Base")

@@ -125,4 +125,5 @@ dmypy.json
 data/
 cka-3.ipynb
 dist/
+build/
 

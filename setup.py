@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="torch_cka",
-    version="0.2",
+    version="0.21",
     author="Anand K Subramanian",
     author_email="anandkrish894@gmail.com",
     description="A package to compare neural networks by their feature similarity",
@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "torch_cka"},
-    packages=setuptools.find_packages(where="torch_cka"),
+    package_dir={"": "."},
+    packages=setuptools.find_packages(),
     python_requires=">=3.7",
 )

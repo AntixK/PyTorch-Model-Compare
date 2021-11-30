@@ -1,6 +1,6 @@
 # PyTorch Model Compare
 
-[![Downloads](https://static.pepy.tech/personalized-badge/torch-cka?period=month&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/torch-cka)
+[![Downloads](https://static.pepy.tech/personalized-badge/torch-cka?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/torch-cka)
 
 A tiny package to compare two neural networks in PyTorch. There are many ways to compare two neural networks, but one robust and scalable way is using the **Centered Kernel Alignment** (CKA) metric, where the features of the networks are compared.
 

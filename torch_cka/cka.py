@@ -172,7 +172,7 @@ class CKA:
                     Y = feat2.flatten(1)
                     L = Y @ Y.t()
                     L.fill_diagonal_(0)
-                    assert K.shape == L.shape, f"Feature shape mistach! {K.shape}, {L.shape}"
+                    assert K.shape == L.shape, f"Feature shape mismatch! {K.shape}, {L.shape}"
 
                     self.hsic_matrix[i, j, 1] += self._HSIC(K, L) / num_batches
                     self.hsic_matrix[i, j, 2] += self._HSIC(L, L) / num_batches

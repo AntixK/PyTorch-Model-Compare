@@ -143,7 +143,10 @@ class CKA:
 
         if dataloader2 is None:
             warn("Dataloader for Model 2 is not given. Using the same dataloader for both models.")
-            dataloader2 = dataloader1
+            dataloader2 = dataloader1 #for convenience in the code
+            same_loader = True
+        else:
+            same_loader = False
 
         self.model1_info['Dataset'] = dataloader1.dataset.__repr__().split('\n')[0]
         self.model2_info['Dataset'] = dataloader2.dataset.__repr__().split('\n')[0]
@@ -153,9 +156,14 @@ class CKA:
 
         self.hsic_matrix = torch.zeros(N, M, 3)
 
-        num_batches = min(len(dataloader1), len(dataloader1))
+        num_batches = min(len(dataloader1), len(dataloader2))
 
-        for (x1, *_), (x2, *_) in tqdm(zip(dataloader1, dataloader2), desc="| Comparing features |", total=num_batches):
+        for item in tqdm(dataloader1 if same_loader else zip(dataloader1, dataloader2), desc="| Comparing features |", total=num_batches):
+            if same_loader:
+                (x, *_) = item
+                x1 = x2 = x
+            else:
+                (x1, *_), (x2, *_) = item
 
             self.model1_features = {}
             self.model2_features = {}
